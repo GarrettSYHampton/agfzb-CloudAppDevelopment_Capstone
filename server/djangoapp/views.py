@@ -13,10 +13,6 @@ import json
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-
-# Create your views here.
-
-
 # Create an `about` view to render a static about page
 def about(request):
     return render(request, "djangoapp/about.html")
@@ -26,12 +22,34 @@ def contact(request):
     return render(request, "djangoapp/contact.html")
 
 # Create a `login_request` view to handle sign in request
-# def login_request(request):
-# ...
+def login_request(request):
+    # Handles POST request
+    if request.method == "POST":
+        # Get username and password from request.POST dictionary
+        username = request.POST['username']
+        password = request.POST['password']
+        # Try to check if provide credential can be authenticated
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # If user is valid, call login method to login current user
+            print("User logged in")
+            login(request, user)
+            return redirect('djangoapp:index')
+        else:
+            print("User is not valid")
+            return redirect('djangoapp:index')
+    else:
+        print("Method is not POST")
+        return redirect('djangoapp:index')
 
 # Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+def logout_request(request):
+   # Get the user object based on session id in request
+    print("Log out the user `{}`".format(request.user.username))
+    # Logout user in the request
+    logout(request)
+    # Redirect user back to course list view
+    return redirect('djangoapp:index')
 
 # Create a `registration_request` view to handle sign up request
 # def registration_request(request):
