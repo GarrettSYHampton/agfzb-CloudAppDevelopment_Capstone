@@ -25,9 +25,9 @@ async function main(params) {
               car_year: review.doc.car_year,
             };
           });
-          if (params.state) {
+          if (params.dealerId) {
             reviews = reviews.filter((review) => {
-              return review.dealership === params.dealerId;
+              return review.dealership == params.dealerId;
             });
           }
           resolve({ reviews });

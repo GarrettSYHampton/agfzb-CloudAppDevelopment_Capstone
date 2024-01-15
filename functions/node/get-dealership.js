@@ -22,6 +22,8 @@ async function main(params) {
               zip: dealership.doc.zip,
               lat: dealership.doc.lat,
               long: dealership.doc.long,
+              short_name: dealership.doc.short_name,
+              full_name: dealership.doc.full_name,
             };
           });
           if (params.state) {
