@@ -99,13 +99,12 @@ def logout_request(request):
 
 def get_dealerships(request):
     if request.method == "GET":
+        context = {}
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/eb0a5bcd-0bd6-4a41-aec7-4a5442418a7f/dealership-package/get-dealership.json"
         # Get dealers from the URL
-        dealerships = get_dealers_from_cf(url)
-        # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-        # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        context["dealerships"] = get_dealers_from_cf(url)
+        # Return a page showing the dealerships in a table
+        return render(request, 'djangoapp/index.html', context)
     else:
         return HttpResponse("Request method is not a GET")
 

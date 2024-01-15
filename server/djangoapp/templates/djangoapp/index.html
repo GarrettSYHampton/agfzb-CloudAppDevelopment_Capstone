@@ -1,4 +1,29 @@
 {% extends 'djangoapp/template.html' %} {% block content %}
-<h1>Dealer Table</h1>
+<h1>All Dealerships</h1>
 <!--Add a dealer table here -->
-{% endblock content %}
+{% if dealerships %}
+<table class="table">
+  <tr>
+    <th scope="col">Dealer Name</th>
+    <th scope="col">Dealer Address</th>
+    <th scope="col">Dealer City</th>
+    <th scope="col">Dealer State</th>
+    <th scope="col">Dealer Zip</th>
+  </tr>
+  {% for dealer in dealerships %}
+  <tr>
+    <td>
+      <a href="{% url 'djangoapp:dealer_details' dealer.id %}">
+        {{ dealer.full_name }}
+      </a>
+    </td>
+    <td>{{ dealer.address }}</td>
+    <td>{{ dealer.city }}</td>
+    <td>{{ dealer.state }}</td>
+    <td>{{ dealer.zip }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No dealerships are available.</p>
+{% endif %} {% endblock content %}

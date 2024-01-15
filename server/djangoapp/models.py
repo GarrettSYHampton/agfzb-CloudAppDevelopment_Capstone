@@ -35,7 +35,7 @@ class CarModel(models.Model):
 
 
 class CarDealer:
-    def __init__(self, address, city, full_name, id, lat, long, short_name, st, zip):
+    def __init__(self, address, city, full_name, id, lat, long, short_name, state, st, zip):
         self.address = address
         self.city = city
         self.full_name = full_name
@@ -44,6 +44,7 @@ class CarDealer:
         self.long = long
         self.short_name = short_name
         self.st = st
+        self.state = state
         self.zip = zip
 
     def __str__(self):
@@ -53,7 +54,7 @@ class CarDealer:
 
 class DealerReview:
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,sort_keys=True, indent=4)
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
     def __init__(self, dealership, name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment, id):
         self.dealership = dealership
