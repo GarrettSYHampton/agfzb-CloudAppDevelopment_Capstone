@@ -1,5 +1,7 @@
-import requests
 import json
+import os
+import requests
+
 from .models import CarDealer, DealerReview
 
 
@@ -86,7 +88,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
             review_obj = DealerReview(dealership=review["dealership"], name=review["name"], purchase=review["purchase"],
                                       review=review["review"], purchase_date=review["purchase_date"],
                                       car_make=review["car_make"], car_model=review["car_model"],
-                                      car_year=review["car_year"], sentiment=sentiment,setiment_image=setiment_image,
+                                      car_year=review["car_year"], sentiment=sentiment, setiment_image=setiment_image,
                                       id=review["id"])
             results.append(json.loads(review_obj.toJSON()))
         return results
@@ -125,7 +127,7 @@ def get_dealer_by_id_from_cf(url, dealerId):
             dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"],
                                    id=dealer["id"], lat=dealer["lat"], long=dealer["long"],
                                    short_name=dealer["short_name"],
-                                   st=dealer["st"],state=dealer["state"], zip=dealer["zip"])
+                                   st=dealer["st"], state=dealer["state"], zip=dealer["zip"])
             if (dealer_obj.id == dealerId):
                 return dealer_obj
 
@@ -133,20 +135,16 @@ def get_dealer_by_id_from_cf(url, dealerId):
 def analyze_review_sentiments(text):
     url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/3e5029bb-dd4b-4310-ab44-fa8f244bbdcb/v1/analyze?version=2019-07-12"
     headers = {'Content-Type': 'application/json',
-               'Authorization': 'Basic YXBpa2V5OnVlRVVBcXdzcVRlQzZtTndZTlIwRmZnQVJSMEJydHc4cFdfQ2tQLUpkRjhN'}
+               'Authorization': os.getenv("IBM_IAM_KEY")}
     request = {
         "text": text,
         "features": {
             "sentiment": {}
         }
     }
-    print("request is:")
-    print(request)
     # Call post method of requests library with URL and parameters
     response = post_request_with_headers(
         url=url, headers=headers, json_data=request)
-    print("response is:")
-    print(response)
     if response:
         return response["sentiment"]["document"]["label"]
     else:
