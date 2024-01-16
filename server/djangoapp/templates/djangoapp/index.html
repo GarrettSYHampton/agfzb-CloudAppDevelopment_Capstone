@@ -2,26 +2,30 @@
 <h1>All Dealerships</h1>
 <!--Add a dealer table here -->
 {% if dealerships %}
-<table class="table">
-  <tr>
-    <th scope="col">Dealer Name</th>
-    <th scope="col">Dealer Address</th>
-    <th scope="col">Dealer City</th>
-    <th scope="col">Dealer State</th>
-    <th scope="col">Dealer Zip</th>
-  </tr>
-  {% for dealer in dealerships %}
-  <tr>
-    <td>
-      <a href="{% url 'djangoapp:dealer_details' dealer.id %}">
-        {{ dealer.full_name }}
-      </a>
-    </td>
-    <td>{{ dealer.address }}</td>
-    <td>{{ dealer.city }}</td>
-    <td>{{ dealer.state }}</td>
-    <td>{{ dealer.zip }}</td>
-  </tr>
+<table class="table" data-toggle="table" data-filter-control="true">
+  <thead>
+    <tr>
+      <th data-field="name" >Dealer Name</th>
+      <th>Dealer Address</th>
+      <th>Dealer City</th>
+      <th data-field="st" data-filter-control="select">Dealer State</th>
+      <th>Dealer Zip</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for dealer in dealerships %}
+    <tr>
+      <td>
+        <a href="{% url 'djangoapp:dealer_details' dealer.id %}">
+          {{ dealer.full_name }}
+        </a>
+      </td>
+      <td>{{ dealer.address }}</td>
+      <td>{{ dealer.city }}</td>
+      <td>{{ dealer.st }}</td>
+      <td>{{ dealer.zip }}</td>
+    </tr>
+  </tbody>
   {% endfor %}
 </table>
 {% else %}
