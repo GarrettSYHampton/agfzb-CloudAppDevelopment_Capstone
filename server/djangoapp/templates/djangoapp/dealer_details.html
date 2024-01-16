@@ -1,18 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dealership Review</title>
-    {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-
-    <body>
-
-    <!--Add a nav bar here -->
-
-    <!-- Add reviews as cards -->
-
-    </body>
-
-</html>
+{% extends 'djangoapp/template.html' %} {% block content %}
+<!-- Add reviews as cards -->
+<h1>Reviews For {{dealership.full_name}}</h1>
+<div class="row">
+  {% if reviews %} {% for review in reviews %}
+  <div class="col-sm-6 col-lg-3 mb-3 mb-sm-0">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <img
+            class="card-img-left"
+            src="{{MEDIA_URL}}/emoji/{{review.setiment_image}}"
+            style="height: 40px"
+          />
+          <h5 class="card-title">Review #{{review.id}}</h5>
+        </div>
+        <h6 class="card-subtitle mb-2 text-muted">{{review.sentiment}}</h6>
+        <p class="card-text">
+          <figure>
+            <blockquote class="blockquote">
+              <p>{{review.review}}</p>
+            </blockquote>
+            <figcaption class="blockquote-footer">
+              Reviewer <cite title="Source Title">{{review.name}}</cite>
+            </figcaption>
+          </figure>
+        </p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">Purchased</div>
+              {{review.purchase}}
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">Purchase Date</div>
+              {{review.purchase_date}}
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">Car Make</div>
+              {{review.car_make}}
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">Car Model</div>
+              {{review.car_model}}
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">Car Year</div>
+              {{review.car_year}}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endfor %} {% else %}
+  <div class="alert alert-warning">No reviews are available.</div>
+  {% endif %}
+</div>
+{%endblock content%}
