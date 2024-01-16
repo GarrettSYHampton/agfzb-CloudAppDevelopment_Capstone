@@ -1,12 +1,21 @@
 {% extends 'djangoapp/template.html' %} {% block content %}
 <!-- Add reviews as cards -->
-<h1>Reviews For {{dealership.full_name}}</h1>
+<div class="d-flex justify-content-between align-items-center">
+  <h1>Reviews For {{dealership.full_name}}</h1>
+  {% if user.is_authenticated %}
+  <a
+    href="{% url 'djangoapp:add_review' dealership.id %}"
+    class="btn btn-primary"
+    >Add a Review</a
+  >
+  {% endif %}
+</div>
 <div class="row">
   {% if reviews %} {% for review in reviews %}
-  <div class="col-sm-6 col-lg-3 mb-3 mb-sm-0">
+  <div class="col-sm-6 col-lg-3 mb-3">
     <div class="card">
       <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex justify-content-between align-items-center">
           <img
             class="card-img-left"
             src="{{MEDIA_URL}}/emoji/{{review.setiment_image}}"
@@ -14,7 +23,6 @@
           />
           <h5 class="card-title">Review</h5>
         </div>
-        <h6 class="card-subtitle mb-2 text-muted">{{review.sentiment}}</h6>
         <p class="card-text">
           <figure>
             <blockquote class="blockquote">

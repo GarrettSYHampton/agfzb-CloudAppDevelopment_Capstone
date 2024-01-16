@@ -39,8 +39,6 @@ def post_request_with_headers(url, headers, json_data):
     except:
         # If any error occurs
         print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
     return json_data
 
@@ -129,8 +127,9 @@ def get_dealer_by_id_from_cf(url, dealerId):
 
 def analyze_review_sentiments(text):
     url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/3e5029bb-dd4b-4310-ab44-fa8f244bbdcb/v1/analyze?version=2019-07-12"
+    # os.getenv("IBM_IAM_KEY")
     headers = {'Content-Type': 'application/json',
-               'Authorization': os.getenv("IBM_IAM_KEY")}
+               'Authorization': "Basic YXBpa2V5OnVlRVVBcXdzcVRlQzZtTndZTlIwRmZnQVJSMEJydHc4cFdfQ2tQLUpkRjhN"}
     request = {
         "text": text,
         "features": {

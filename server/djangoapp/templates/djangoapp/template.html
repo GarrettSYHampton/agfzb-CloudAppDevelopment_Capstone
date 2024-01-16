@@ -73,14 +73,14 @@
             </li>
           </ul>
           {% if user.is_authenticated %}
-          <form class="d-flex" action="{% url 'djangoapp:logout' %}">
+          <form class="d-flex align-items-center" action="{% url 'djangoapp:logout' %}">
             {% csrf_token %}
-            <span>{{user.username}}</span>
+            <div>{{user.username}}</div>
             <button class="btn btn-link" type="submit">Logout</button>
           </form>
           {% else %}
           <form
-            class="d-flex"
+            class="d-flex align-items-center"
             action="{% url 'djangoapp:login' %}"
             method="post"
           >
