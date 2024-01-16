@@ -1,26 +1,51 @@
 {% extends 'djangoapp/template.html' %} {% block content %}
-<h1>Add Review</h1>
-<form action="{% url 'djangoapp:add_review' %}" method="POST">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="inputDealershipId">Dealer ID</label>
-    <input
-      type="text"
-      class="form-control"
-      id="inputDealershipId"
-      name="dealerId"
-      placeholder="Enter Dealer ID:"
-    />
+<h1>Add Review About {{dealership.full_name}}</h1>
+<div class="row">
+  <div class="col-md-4">
+    <form action="{% url 'djangoapp:add_review' dealer_id  %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="inputReview">Enter the review content:</label>
+        <textarea
+          class="form-control"
+          id="inputReview"
+          name="review"
+          placeholder="This is a great car dealer!"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="inputPurchased">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="inputPurchased"
+            name="purchase"
+          />&nbsp;Did you purchase the car from the dealership?
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="inputCar"> Select your car (model-make-year)</label>
+        <select name="car" id="inputCar" class="form-select" required>
+          {% for car in cars %}
+          <option selected value="{{car.id}}">
+            {{car.name}}-{{car.make.name}}-{{ car.year|date:"Y" }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="inputPurchaseDate"> Select Your Purchase Date </label>
+        <input
+          type="date"
+          class="form-control"
+          id="inputPurchaseDate"
+          name="purchase_date"
+        />
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Add Review</button>
+      </div>
+    </form>
   </div>
-  <div class="form-group">
-    <label for="inputReview">Review</label>
-    <textarea
-      class="form-control"
-      id="inputReview"
-      name="review"
-      placeholder="Enter Review:"
-    ></textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Add Review</button>
-</form>
+</div>
 {%endblock%}

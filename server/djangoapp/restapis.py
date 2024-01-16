@@ -14,23 +14,19 @@ def get_request(url, **kwargs):
     except:
         # If any error occurs
         print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
     return json_data
 
 
-def post_request(url, json_payload, **kwargs):
+def post_request(url, json_data):
     """Sends a post request to the specified url with the specified json data"""
     try:
         # Call post method of requests library with URL and parameters
         response = requests.post(
-            url, headers={'Content-Type': 'application/json'}, params=kwargs, json=json_payload)
+            url, headers={'Content-Type': 'application/json'}, json=json_data)
     except:
         # If any error occurs
         print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
     return json_data
 
@@ -88,8 +84,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
             review_obj = DealerReview(dealership=review["dealership"], name=review["name"], purchase=review["purchase"],
                                       review=review["review"], purchase_date=review["purchase_date"],
                                       car_make=review["car_make"], car_model=review["car_model"],
-                                      car_year=review["car_year"], sentiment=sentiment, setiment_image=setiment_image,
-                                      id=review["id"])
+                                      car_year=review["car_year"], sentiment=sentiment, setiment_image=setiment_image)
             results.append(json.loads(review_obj.toJSON()))
         return results
 

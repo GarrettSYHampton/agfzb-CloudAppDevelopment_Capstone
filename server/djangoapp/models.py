@@ -56,7 +56,7 @@ class DealerReview:
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
-    def __init__(self, dealership, name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment, setiment_image, id):
+    def __init__(self, dealership, name, purchase, review, purchase_date, car_make, car_model, car_year, sentiment, setiment_image):
         self.dealership = dealership
         self.name = name
         self.purchase = purchase
@@ -67,7 +67,6 @@ class DealerReview:
         self.car_year = car_year
         self.sentiment = sentiment
         self.setiment_image = setiment_image
-        self.id = id
 
     def __str__(self):
         return "Dealer name: " + self.dealership + "," + \

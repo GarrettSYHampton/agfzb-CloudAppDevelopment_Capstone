@@ -1,10 +1,12 @@
 import json
+import logging
+
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from djangoapp.restapis import analyze_review_sentiments, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, get_dealers_from_cf, post_request
-import logging
+from djangoapp.restapis import get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, get_dealers_from_cf, post_request
+from djangoapp.models import CarModel
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -117,7 +119,8 @@ def get_dealer_details(request, dealer_id):
         context["reviews"] = get_dealer_reviews_from_cf(
             url, dealerId=dealer_id)
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/eb0a5bcd-0bd6-4a41-aec7-4a5442418a7f/dealership-package/get-dealership.json"
-        context["dealership"] = get_dealer_by_id_from_cf(url, dealerId=dealer_id)
+        context["dealership"] = get_dealer_by_id_from_cf(
+            url, dealerId=dealer_id)
         # Return a page showing the dealerships in a table
         return render(request, 'djangoapp/dealer_details.html', context)
     else:
@@ -125,21 +128,40 @@ def get_dealer_details(request, dealer_id):
 
 
 def add_review(request, dealer_id):
-    # See if user is authenticated
-    if (request.user):
-        if request.method == "POST":
-            url = "https://us-south.functions.appdomain.cloud/api/v1/web/eb0a5bcd-0bd6-4a41-aec7-4a5442418a7f/dealership-package/create-review"
-            json_data = {}
-            json_data["name"] = request.user.first_name + \
-                " " + request.user.last_name
-            json_data["dealership"] = dealer_id
-            json_data["review"] = request.POST["review"]
-            json_data["purchase"] = ""
-            json_data["purchase_date"] = ""
-            json_data["car_make"] = ""
-            json_data["car_model"] = ""
-            json_data["car_year"] = ""
-            response = post_request(url, json_data)
-            return HttpResponse(json.dumps(response))
-    else:
-        return HttpResponse("You need to login first")
+    if request.method == "GET":
+        context = {
+            "dealer_id": dealer_id,
+        }
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/eb0a5bcd-0bd6-4a41-aec7-4a5442418a7f/dealership-package/get-dealership.json"
+        context["dealership"] = get_dealer_by_id_from_cf(
+            url, dealerId=dealer_id)
+        # Get all cars from the database
+        context["cars"] = CarModel.objects.all()
+        if (request.user.is_authenticated):
+            return render(request, "djangoapp/add_review.html", context)
+        else:
+            return redirect("djangoapp:index")
+    elif request.method == "POST":
+        # See if user is authenticated
+        if (request.user.is_authenticated):
+            if request.method == "POST":
+                url = "https://us-south.functions.appdomain.cloud/api/v1/web/eb0a5bcd-0bd6-4a41-aec7-4a5442418a7f/dealership-package/create-review.json"
+
+                selected_car = CarModel.objects.get(pk=request.POST["car"])
+
+                json_data = {
+                    "review": {
+                        "name": request.user.first_name + " " + request.user.last_name,
+                        "dealership": dealer_id,
+                        "review": request.POST["review"],
+                        "purchase": True if request.POST["purchase"] else False,
+                        "purchase_date": request.POST["purchase_date"],
+                        "car_make": selected_car.make.name,
+                        "car_model": selected_car.name,
+                        "car_year": selected_car.year.strftime("%Y"),
+                    }
+                }
+                post_request(url=url, json_data=json_data)
+                return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+        else:
+            return HttpResponse("You need to login first")
